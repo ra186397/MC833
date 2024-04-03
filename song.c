@@ -47,6 +47,21 @@ struct song createSong() {
     return newSong;
 }
 
+struct song searchSong(int identifier, struct songList* songList) {
+    struct songList* searcher = songList;
+    while (searcher != NULL) {
+        if (searcher->song.identifier == identifier) {
+            return searcher->song;
+        }
+        searcher = searcher->next;
+    }
+
+    printf("Song not found. Defaulting to first song.");
+    return songList->song;
+
+}
+
+
 void registerSong(struct songList* songList) {
     struct song newSong = createSong();
     struct songList* node = (struct songList*)malloc(sizeof(struct songList));
@@ -74,18 +89,32 @@ void listSongsByType(struct songList* songList, char* type) {
 
 void listSong(struct songList* songList, int identifier) {
 
+    struct song song = searchSong(identifier, songList);
+
+    printf("Song identifier: %d", song.identifier);
+    printf("Song title: %s", song.title);
+    printf("Song interpret: %s", song.interpret);
+    printf("Song language: %s", song.language);
+    printf("Song type: %s", song.type);
+    printf("Song chorus: %s", song.chorus);
+    printf("Song year: %d", song.year);
 }
 
 void listAllSongs(struct songList* songList) {
 
+    struct songList* songListCopy = songList;
+    while (songListCopy != NULL) {
+        listSong(songListCopy, songListCopy->song.identifier);
+        songListCopy = songListCopy->next;
+    }
 }
 
 void downloadSong(struct songList* songList, int identifier) {
-
+    // WIll only be implemented in project 2.
 }
 
 int main() {
-    struct songList* songList = (struct songList*)malloc(sizeof(struct songList));
+    struct songList* songList = NULL;
     registerSong(songList);
     listSong(songList, 1);
     registerSong(songList);
